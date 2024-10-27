@@ -3,7 +3,7 @@ package app
 import "github.com/HenkCode/go-Shop/app/models"
 
 type Model struct {
-	Model interface{}
+	Model any
 }
 
 func RegisterModels() []Model {

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/HenkCode/go-Shop/database/seeders"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -35,6 +36,7 @@ func (server *Server) Initialize(appConfig AppConfig, dbConfig DBConfig) {
 
 	server.initializeDB(dbConfig)
 	server.initializeRoutes()
+	seeders.DBSeeder(server.DB)
 }
 
 
