@@ -1,6 +1,7 @@
 package app
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"github.com/HenkCode/go-Shop/database/seeders"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
+	"github.com/urfave/cli/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -31,12 +33,10 @@ type Server struct {
 	Router *fiber.App
 }
 
-func (server *Server) Initialize(appConfig AppConfig, dbConfig DBConfig) {
+func (server *Server) Initialize(appConfig AppConfig) {
 	fmt.Println("Server " + appConfig.Name + " Berjalan...")
 
-	server.initializeDB(dbConfig)
 	server.initializeRoutes()
-	seeders.DBSeeder(server.DB)
 }
 
 
@@ -50,19 +50,53 @@ func (server *Server) initializeDB(dbConfig DBConfig) {
 	var err error
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
-	fmt.Println("DSN:", dsn)
 	server.DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
 	if err != nil {
 		panic("Failed connecting to the database server.")
 	}
-	
+}
+
+func (server *Server) dbMigrate() {
 	for _, model := range RegisterModels() {
-		err = server.DB.Debug().AutoMigrate(model.Model)
+		err := server.DB.Debug().AutoMigrate(model.Model)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		fmt.Println("Succesfully Migrate...")
 	}
-	fmt.Println("Database migrated successfully.")
+
+}
+
+func (server *Server) initCommands(appConfig AppConfig, dbConfig DBConfig) {
+	server.initializeDB(dbConfig)
+
+	cmdApp := cli.NewApp()
+	cmdApp.Commands = []*cli.Command{
+		{
+			Name: "db:migrate",
+			Action: func(c *cli.Context) error {
+				server.dbMigrate()
+				return nil
+			},
+		},
+		{
+			Name: "db:seed",
+			Action: func(c *cli.Context) error {
+				err := seeders.DBSeeder(server.DB)
+				if err != nil {
+					log.Fatal(err)
+				}
+				return nil
+			},
+		},
+	}
+
+	err := cmdApp.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func getEnv(key, defaultValue string) string {
@@ -92,6 +126,13 @@ func Run() {
 	dbConfig.Password = getEnv("DB_PASSWORD", "")
 	dbConfig.Port     = getEnv("DB_PORT", "5432")
 
-	server.Initialize(appConfig, dbConfig)
-	server.Run(":" + appConfig.Port)
+	flag.Parse()
+	arg := flag.Arg(0)
+
+	if arg != "" {
+		server.initCommands(appConfig, dbConfig)
+	} else {
+		server.Initialize(appConfig)
+		server.Run(":" + appConfig.Port)
+	}
 }
