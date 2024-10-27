@@ -1,7 +1,6 @@
-package app
+package handlers
 
 import (
-	"github.com/HenkCode/go-Shop/app/handlers"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 )
@@ -20,5 +19,6 @@ func (server *Server) initializeRoutes() {
 	server.Router.Static("/fonts", "./assets/fonts")
 	server.Router.Static("/scss", "./assets/scss")
 
-	server.Router.Get("/", handlers.Home)
+	server.Router.Get("/", server.Home)
+	server.Router.Get("/products", server.Product)
 }

@@ -2,6 +2,6 @@ package handlers
 
 import "github.com/gofiber/fiber/v2"
 
-func Home(c *fiber.Ctx) error {
+func (Server *Server) Home(c *fiber.Ctx) error {
 	return c.Render("layout", nil)
 }

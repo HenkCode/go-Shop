@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>IndoMarket - Free E-Commerce Website Template built with Boostrap 4 and Argon Design System</title>
+    <title>HenkCode</title>
 
     <!-- Fonts -->
     <link
@@ -53,8 +53,8 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-3 col-12 col-sm-6">
-                        <a class="navbar-brand mr-lg-5" href="./index.html">
-                            <i class="fa fa-shopping-bag fa-3x"></i> <span class="logo">IndoMarket</span>
+                        <a class="navbar-brand mr-lg-5" href="/">
+                            <i class="fa fa-shopping-bag fa-3x"></i> <span class="logo">HenkCode.</span>
                         </a>
                     </div>
                     <div class="col-lg-7 col-12 col-sm-6">
@@ -103,7 +103,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">Pages</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="products.html">Products</a>
+                                <a class="dropdown-item" href="/products">Products</a>
                                 <a class="dropdown-item" href="product-detail.html">Product Detail</a>
                                 <a class="dropdown-item" href="cart.html">Cart</a>
                                 <a class="dropdown-item" href="checkout.html">Checkout</a>
@@ -114,7 +114,8 @@
             </div> <!-- container .// -->
         </nav>
     </header>
-    {{ template "home" }}
+    {{ block "home" . }}{{ end }}
+    {{ block "products" . }}{{ end }}
     <footer class="footer bg-primary">
         <div class="footer-top">
             <div class="container">
@@ -170,8 +171,8 @@
                                 <ul>
                                     <li>NO. 342 - London Oxford Street.</li>
                                     <li>012 United Kingdom.</li>
-                                    <li>info@indomarket.com</li>
-                                    <li>+032 3456 7890</li>
+                                    <li>henkradhityar@gmail.com</li>
+                                    <li>+62 851 7326 9960</li>
                                 </ul>
                             </div>
                             <!-- End Single Widget -->
