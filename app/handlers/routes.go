@@ -10,15 +10,24 @@ func (server *Server) initializeRoutes() {
 
 	server.Router = fiber.New(fiber.Config{
 		Views: engine,
+		ViewsLayout: "layout",
+		PassLocalsToViews: true,
 	})
 	
-	server.Router.Static("/css", "./assets/css")
-	server.Router.Static("/js", "./assets/js")
-	server.Router.Static("/img", "./assets/img")
-	server.Router.Static("/demo", "./assets/demo")
-	server.Router.Static("/fonts", "./assets/fonts")
-	server.Router.Static("/scss", "./assets/scss")
+	staticDirs := map[string]string{
+        "/css":   "./assets/css",
+        "/js":    "./assets/js",
+        "/img":   "./assets/img",
+        "/demo":  "./assets/demo",
+        "/fonts": "./assets/fonts",
+        "/scss":  "./assets/scss",
+    }
+
+    for route, path := range staticDirs {
+        server.Router.Static(route, path)
+    }
 
 	server.Router.Get("/", server.Home)
-	server.Router.Get("/products", server.Product)
+	server.Router.Get("/products", server.Products)
+	server.Router.Get("/products/:slug", server.GetProductBySlug)
 }

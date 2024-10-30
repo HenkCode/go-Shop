@@ -29,6 +29,7 @@ func Run() {
 	appConfig.Name = getEnv("APP_NAME", "go-Shop")
 	appConfig.Env = getEnv("APP_ENV", "dev")
 	appConfig.Port = getEnv("APP_PORT", "9000")
+	appConfig.URL = getEnv("APP_URL", "localhot:9999")
 
 	dbConfig.Host = getEnv("DB_HOST", "localhost")
 	dbConfig.Name = getEnv("DB_NAME", "go-shop")
